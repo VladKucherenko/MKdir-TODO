@@ -1,0 +1,5 @@
+{
+    "port": 5000,
+    "mongoURI": "mongodb+srv://vladkucherenko:0123456789@cluster0.h7g3n.mongodb.net/todo_db?retryWrites=true&w=majority",
+    "jwtSecret": "ioyuiyhtgsdjk34tf34ft3r3rg3ewrfddfdfvfrv"
+}
