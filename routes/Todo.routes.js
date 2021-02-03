@@ -6,17 +6,14 @@ const authMiddleware = require('./../middlewares/auth-middleware')
 
 route.get('/lists', authMiddleware, async (req, res) => {
     try{
-        //req.user.userId
         const user = req.user
-        // console.log(req.body)
         const lists = await List.find({ owner: user.userId }).sort([['order', -1]]).exec((err, docs) => {
-            if(err) return res.status(500).json({message: 'Smth went wrong'})
+            if(err) return res.status(500).json({message: `Error: ${err}`})
             res.status(200).json(docs)
         });
-        // const lists = await List.find({ owner: user.userId })
         
     } catch(e) {
-        res.status(400).json({message: `Error: method get todo/lists ${e.message}`})
+        res.status(400).json({message: `Error:  ${e.message}`})
     }
 })
 
@@ -27,14 +24,14 @@ route.post('/lists', authMiddleware, async (req, res) => {
         const thisUser = await Users.findById(user.userId)
         let increment = thisUser.sequence + 1
         await Users.findByIdAndUpdate(user.userId, {sequence: increment}, {sequence: increment},  (err, todo) => {
-            if (err) return res.status(500).json({message: 'Smth went wrong'})
+            if (err) return res.status(500).json({message: `Error: ${err}`})
         })
         const newList = new List({title: body.title, owner: user.userId, order: increment})
         await newList.save()
         const findCreatedList = await List.findById(newList.id)
         return res.status(201).json(findCreatedList)
     } catch (e) {
-        res.status(400).json({message: `Error: method post todo/lists ${e.message}`})
+        res.status(400).json({message: `Error: ${e.message}`})
     }
 })
 
@@ -42,11 +39,11 @@ route.delete('/lists/:todolistid', authMiddleware, async (req, res) => {
     try {
         const todoListId = req.params.todolistid
         List.findByIdAndRemove(todoListId, (err, todo) => { 
-            if(err) return res.status(500).json({message: 'Smth went wrong'})
+            if(err) return res.status(500).json({message: `Error: ${err}`})
             res.status(200).json({message: `Title '${todo.title}' deleted`})
          })
     } catch (e) {
-        res.status(400).json({message: `Error: method delete todo/lists/:todolistid ${e.message}`})
+        res.status(400).json({message: `Error: ${e.message}`})
     }
 })
 
@@ -56,12 +53,12 @@ route.put('/lists/:todolistid', authMiddleware, async (req, res) => {
         const body = req.body
         
         List.findByIdAndUpdate(todoListId, req.body, {title: body.title}, (err, todo) => {
-            if (err) return res.status(500).json({message: 'Smth went wrong'})
+            if (err) return res.status(500).json({message: `Error: ${err}`})
             res.status(200).json({message: `Title '${todo.title}' updated to '${body.title}'`})
         })
         
     } catch (e) {
-        res.status(400).json({message: `Error: method put todo/lists/:todolistid ${e.message}`})
+        res.status(400).json({message: `Error: ${e.message}`})
     }
 })
 
@@ -81,7 +78,7 @@ route.put('/lists/:todolistid/reorder', authMiddleware, async (req, res) => {
 
         res.status(200).json({message: `Lists are changed`})
     } catch (e) {
-        res.status(400).json({message: `Error: method put todo/lists/:todolistid/reorder ${e.message}`})
+        res.status(400).json({message: `Error: ${e.message}`})
     }
 })
 

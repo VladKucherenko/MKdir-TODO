@@ -11,8 +11,7 @@ const initialState = {
     user: {
         firstName: null as null | string,
         lastName: null as null | string,
-        token: null as null | string,
-        userId: null as null | string
+        token: null as null | string
     },
     isAuthorized: false,
     message: null as null | string

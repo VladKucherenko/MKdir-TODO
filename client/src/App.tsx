@@ -15,7 +15,6 @@ import { getTodoMessage } from './redux/todo/todo-selectors';
 import { getTodoTaskMessage } from './redux/todo-tasks/todoTask-selectors';
 
 const App = () => {
-
   const isAuthorized = useSelector(getIsAuthorized)
   const user = useSelector(getUserInfo)
   const dispatch = useDispatch()
