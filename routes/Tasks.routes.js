@@ -10,8 +10,11 @@ route.get('/:todolistid/tasks', authMiddleware, async (req, res) => {
     try{   
         const todolistId = req.params.todolistid
         const user = req.user //userId
-        const tasksList = await Task.find({ listId: todolistId, owner: user.userId }).sort([['order', -1]]).exec((err, docs) => {
+        await Task.find({ listId: todolistId, owner: user.userId }).sort([['order', -1]]).exec((err, docs) => {
             if(err) return res.status(500).json({message: `Error: ${err}`})
+            docs.forEach(doc => {
+                doc.owner = null
+            })
             res.status(200).json(docs)
         })
         
@@ -33,6 +36,7 @@ route.post('/:todolistid/tasks', authMiddleware, async (req, res) => {
         const newTask = new Task({title: body.title, owner: user.userId, listId: todolistId, order: increment})
         await newTask.save()
         const findCreatedTask = await Task.findById({_id: newTask.id, listId: todolistId, owner: user.useId })
+        findCreatedTask.owner = null
         return res.status(201).json(findCreatedTask)
     } catch (e) {
         res.status(400).json({message: `Error: ${e.message}`})
@@ -63,6 +67,7 @@ route.put('/:todolistid/tasks/:taskid', authMiddleware, async (req, res) => {
         const updatedTask = await Task.findByIdAndUpdate({_id: taskId , listId: todoListId, owner: user.userId}, req.body, {title, completed, deadline, description}, (err, todo) => {
             if (err) return res.status(500).json({message: `Error: ${err}`})
         })
+        updatedTask.owner = null
         res.status(200).json({message: `Updated successfully`, updatedTask})
     } catch (e) {
         res.status(400).json({message: `Error: ${e.message}`})

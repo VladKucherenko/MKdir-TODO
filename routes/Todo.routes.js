@@ -7,8 +7,11 @@ const authMiddleware = require('./../middlewares/auth-middleware')
 route.get('/lists', authMiddleware, async (req, res) => {
     try{
         const user = req.user
-        const lists = await List.find({ owner: user.userId }).sort([['order', -1]]).exec((err, docs) => {
+        await List.find({ owner: user.userId }).sort([['order', -1]]).exec((err, docs) => {
             if(err) return res.status(500).json({message: `Error: ${err}`})
+            docs.forEach(doc => {
+                doc.owner = null
+            })
             res.status(200).json(docs)
         });
         
@@ -29,6 +32,7 @@ route.post('/lists', authMiddleware, async (req, res) => {
         const newList = new List({title: body.title, owner: user.userId, order: increment})
         await newList.save()
         const findCreatedList = await List.findById(newList.id)
+        findCreatedList.owner = null
         return res.status(201).json(findCreatedList)
     } catch (e) {
         res.status(400).json({message: `Error: ${e.message}`})
