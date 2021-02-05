@@ -2,20 +2,20 @@ const config = require('config')
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const path = require('path')
 const authRoutes = require('./routes/Auth.routes')
 const todoRoutes = require('./routes/Todo.routes')
 const tasksRoutes = require('./routes/Tasks.routes')
+const path = require('path')
 
 let app = express();
-
-const PORT = process.env.PORT || config.get('port')
 
 app.use(express.json({ extended: true }))
 app.use('/api/auth', authRoutes)
 app.use('/api/todo', todoRoutes)
 app.use('/api/tasks', tasksRoutes)
 app.use(cors())
+
+const PORT = process.env.PORT || config.get('port')
 
 const start = async () => {
     try {
