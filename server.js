@@ -5,7 +5,7 @@ const cors = require('cors')
 const authRoutes = require('./routes/Auth.routes')
 const todoRoutes = require('./routes/Todo.routes')
 const tasksRoutes = require('./routes/Tasks.routes')
-const PORT = config.get('port')
+const PORT = process.env.PORT || config.get('port')
 
 let app = express();
 
