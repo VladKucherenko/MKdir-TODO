@@ -48,7 +48,6 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    
     if (isAuthorized === true) {
       localStorage.setItem('items', JSON.stringify(user))
     } else {
